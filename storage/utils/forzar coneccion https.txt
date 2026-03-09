@@ -1,0 +1,7 @@
+ if (
+            app()->environment('production') || // cuando estés en producción real
+            str_starts_with(config('app.url'), 'https://') || // ngrok o APP_URL https
+            Request::server('HTTPS') == 'on' // servidores con HTTPS
+        ) {
+            URL::forceScheme('https');
+        }
