@@ -372,13 +372,13 @@ return [
 
 
     // Perfil y logout (visible para todos)
-    /*['header' => 'CUENTA'],
+    ['header' => 'CUENTA'],
 
     [
-        'text'    => 'Mi Perfil',
+        'text'    => 'Cambiar Contraseña',
         'route'   => 'profile.edit',
         'icon'    => 'fas fa-user',
-    ],*/
+    ],
 
 
 ],
