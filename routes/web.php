@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;  
 use App\Http\Controllers\InventarioSucursalController;
 use App\Http\Controllers\VentaDetalleController;
+use App\Http\Controllers\passwordRecoveryController;
 // Página de bienvenida pública (sin login)
 Route::get('/', function () {
     return view('bienvenida');
@@ -79,7 +80,38 @@ Route::get('/ventas-huawei', [VentaDetalleController::class, 'index'])
     ->name('ventas.huawei.excel');
 Route::get('/ventas-huawei/pdf', [VentaDetalleController::class, 'exportPdf'])
     ->name('ventas.huawei.pdf');
+
+//Mostrar formulario para ingresar correo
+Route::get('/recovery', function () {
+    //return view('auth.recovery-request');
+    dd('si jala xd');
+})->name('recovery.request');
+
+
+// en routes/web.php
+
+Route::get('/recovery/reset', function () {
+    return view('auth.recovery-reset');
+})->name('recovery.reset.form');
+
 });
+Route::get('/recovery', function () {
+    return view('auth.recovery-request');
+    //dd('si jala xd');
+})->name('recovery.request');
+// Enviar código
+Route::post('/recovery/send-code', [passwordRecoveryController::class, 'sendCode'])->name('recovery.send-code');
+//esta ruta se utilizara mas adelante no la borres pero menos la uses xd
+//Route::get('/password/forgot', [NewPasswordController::class, 'showEmailForm'])->name('password.request');
+//formulario para cambiar la contraseña
+Route::get('/recovery/reset', function () {
+    return view('auth.recovery-reset');
+})->name('recovery.reset.form');
+
+Route::post('/recovery/reset-password',
+    [passwordRecoveryController::class, 'resetPassword']
+)->name('recovery.reset');
 
 // Rutas de autenticación (ogin, register, etc.) que vienen de auth.php
+//no borres la de abajo se cae todo xd
 require __DIR__.'/auth.php';

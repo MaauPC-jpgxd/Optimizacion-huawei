@@ -49,4 +49,7 @@
             </x-primary-button>
         </div>
     </form>
+    <a class="btn btn-link" href="/recovery">
+                {{ __('¿Olvidaste tu contraseña?') }}
+            </a>
 </x-guest-layout>
