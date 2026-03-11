@@ -60,7 +60,7 @@ class PasswordRecoveryController extends Controller {
 
         if (!$recoveryCode) {
             return response()->json([
-                'error' => '❌ Código inválido, expirado o ya usado'
+                'error' => '❌ Código inválido'
             ], 400);
         }
 
@@ -73,8 +73,9 @@ class PasswordRecoveryController extends Controller {
         $recoveryCode->update(['is_active' => 0]);
         $recoveryCode->delete();
 
-        return response()->json([
+       /* return response()->json([
             'message' => '✅ Contraseña actualizada exitosamente'
-        ], 200);
+        ], 200);*/
+        return redirect()->route('pasword.confirmation');
     }
 }

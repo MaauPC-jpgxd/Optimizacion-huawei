@@ -111,7 +111,10 @@ Route::get('/recovery/reset', function () {
 Route::post('/recovery/reset-password',
     [passwordRecoveryController::class, 'resetPassword']
 )->name('recovery.reset');
-
+//pantalla de cambio exitoso
+Route::get('/exito', function () {
+    return view('auth.pasword-confirmation');
+})->name('pasword.confirmation');
 // Rutas de autenticación (ogin, register, etc.) que vienen de auth.php
 //no borres la de abajo se cae todo xd
 require __DIR__.'/auth.php';
