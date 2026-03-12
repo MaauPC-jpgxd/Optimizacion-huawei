@@ -1,74 +1,77 @@
 <x-guest-layout>
-    <div class="container">
-        <div class="confirmation-box">
-            <div class="check-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h1>¡Contraseña Cambiada!</h1>
-            <p>Tu contraseña ha sido actualizada exitosamente.</p>
-            <a href="{{ route('login') }}" class="btn btn-primary">Volver al Login</a>
+
+<div style="display:flex;justify-content:center;align-items:center;min-height:100vh">
+
+    <div style="background:white;padding:40px;border-radius:10px;width:420px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.1)">
+
+        <!-- Check animado -->
+        <div style="display:flex;justify-content:center;margin-bottom:25px">
+            <svg class="checkmark" viewBox="0 0 52 52" width="90" height="90">
+
+                <circle 
+                    cx="26"
+                    cy="26"
+                    r="25"
+                    fill="none"
+                    stroke="#22c55e"
+                    stroke-width="3"
+                    stroke-dasharray="166"
+                    stroke-dashoffset="166"
+                    class="circle"
+                />
+
+                <path
+                    d="M14 27l7 7 16-16"
+                    fill="none"
+                    stroke="#22c55e"
+                    stroke-width="3"
+                    stroke-dasharray="48"
+                    stroke-dashoffset="48"
+                    class="check"
+                />
+
+            </svg>
         </div>
+
+        <h1 style="font-size:24px;font-weight:bold;margin-bottom:10px">
+            ¡Contraseña Cambiada!
+        </h1>
+
+        <p style="color:#6b7280;margin-bottom:25px">
+            Tu contraseña ha sido actualizada exitosamente.
+        </p>
+
+        <a href="{{ route('login') }}"
+           style="display:inline-block;background:#2563eb;color:white;padding:12px 25px;border-radius:6px;font-weight:bold;text-decoration:none">
+            Volver al Login
+        </a>
+
     </div>
 
-    @push('styles')
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <style>
-            .container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
-                background-color: #f8f9fa;
-            }
+</div>
 
-            .confirmation-box {
-                background-color: #fff;
-                border-radius: 10px;
-                padding: 30px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                text-align: center;
-                width: 400px;
-            }
+<style>
 
-            .check-icon {
-                font-size: 80px;
-                color: #28a745; /* Verde */
-                margin-bottom: 20px;
-                animation: checkAnimation 1s ease-in-out;
-            }
+.circle{
+    animation: circleDraw 0.6s forwards;
+}
 
-            h1 {
-                color: #343a40;
-                margin-bottom: 15px;
-            }
+.check{
+    animation: checkDraw 0.4s 0.6s forwards;
+}
 
-            p {
-                color: #6c757d;
-                margin-bottom: 25px;
-            }
+@keyframes circleDraw{
+    to{
+        stroke-dashoffset:0;
+    }
+}
 
-            .btn-primary {
-                background-color: #007bff;
-                color: #fff;
-                padding: 12px 25px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-            }
+@keyframes checkDraw{
+    to{
+        stroke-dashoffset:0;
+    }
+}
 
-            .btn-primary:hover {
-                background-color: #0056b3;
-            }
+</style>
 
-            @keyframes checkAnimation {
-                0% {
-                    transform: scale(0);
-                }
-                100% {
-                    transform: scale(1);
-                }
-            }
-        </style>
-    @endpush
 </x-guest-layout>
