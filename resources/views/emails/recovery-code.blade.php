@@ -14,6 +14,6 @@
     <div class="code-box">{{ $code }}</div>
     <p>Este código expirará en <strong>1 hora D:</strong>.</p>
     <p>Si no solicitaste este cambio, ignora este correo.</p>
-    <p> Este correo es generado por el sistema de inventario no responder</p>
+    <p> Este correo es generado por el sistema de inventario favor de no responder</p>
 </body>
 </html>
