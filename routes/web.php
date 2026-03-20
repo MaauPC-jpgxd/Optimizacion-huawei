@@ -5,6 +5,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\InventarioSucursalController;
 use App\Http\Controllers\VentaDetalleController;
 use App\Http\Controllers\passwordRecoveryController;
+use App\Http\Controllers\VentasCabeceraController;
+use App\Http\Controllers\VentasDController;
 // Página de bienvenida pública (sin login)
 Route::get('/', function () {
     return view('bienvenida');
@@ -71,15 +73,19 @@ Route::get('/ventas-huawei', [VentaDetalleController::class, 'index'])
     ->name('ventas.huawei.excel');
 Route::get('/ventas-huawei/pdf', [VentaDetalleController::class, 'exportPdf'])
     ->name('ventas.huawei.pdf');
-//Mostrar formulario para ingresar correo
-Route::get('/recovery', function () {
-    //return view('auth.recovery-request');
-    dd('si jala xd');
-})->name('recovery.request');
-// en routes/web.php
-Route::get('/recovery/reset', function () {
-    return view('auth.recovery-reset');
-})->name('recovery.reset.form');
+    //ruta factura
+    Route::get('/facturas',[VentasCabeceraController::class,'index']);
+    //ex´portar facturas 
+    Route::get('factura/export-excel',[VentasCabeceraController::class, 'exportExcel'])
+    ->name('factura.export.excel');
+//ventas nuevo 
+Route::get('/ventasd', [VentasDController::class, 'index'])->name('ventasd.index');
+//ventas a excel 
+Route::get('/ventasd/excel', [VentasDController::class, 'exportExcel'])
+    ->name('ventasd.excel');
+//ventas a pdf
+Route::get('/ventasd/pdf', [VentasDController::class, 'exportPDF'])
+    ->name('ventasd.pdf');
 
 });
 Route::get('/recovery', function () {
@@ -102,6 +108,7 @@ Route::post('/recovery/reset-password',
 Route::get('/exito', function () {
     return view('auth.pasword-confirmation');
 })->name('pasword.confirmation');
+
 // Rutas de autenticación (ogin, register, etc.) que vienen de auth.php
 //no borres la de abajo se cae todo xd
 require __DIR__.'/auth.php';

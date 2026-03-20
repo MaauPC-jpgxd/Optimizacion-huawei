@@ -251,8 +251,8 @@ return [
     |
     */
 
-    'use_route_url' => true,
-    'dashboard_url' => 'dashboard',
+    'use_route_url' => false,
+    'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -293,77 +293,108 @@ return [
     |
     */
 
-  'menu' => [
-
+    'menu' => [
+    // Ítems en la navbar superior (derecha)
+    [
+       //'type'         => 'navbar-search',
+        //'text'         => 'Buscar',
+        //'topnav_right' => true,
+    ],
     [
         'type'         => 'fullscreen-widget',
         'topnav_right' => true,
     ],
 
+    // Menú lateral (sidebar) - lo importante
+    [
+        //'type' => 'sidebar-menu-search',
+        //'text' => 'Buscar en menú',
+    ],
+
+    // Dashboard general (visible para todos)
     [
         'text'   => 'Dashboard',
-        'url'    => '/dashboard', // 🔥 usamos url aquí
+        'route'  => 'dashboard',  // o 'home' si usas Breeze
         'icon'   => 'fas fa-tachometer-alt',
+        'active' => ['dashboard*', 'home*'],
     ],
 
-    ['header' => 'PRODUCTOS'],
+    // Sección solo para todos (inventario)
+    ['header' => 'Productos '],
+    [
+    'text'    => 'Productos en Sucursales',
+    'route'   => 'inventario.index',   // nombre de la ruta que creamos
+    'icon'    => 'fas fa-warehouse',   // ícono chido de almacén
+    'active'  => ['inventario*'],      // resalta cuando estás en cualquier ruta de inventario
+],
 
     [
-        'text'   => 'Productos en Sucursales',
-        'route'  => 'inventario.index',
-        'icon'   => 'fas fa-warehouse',
+        //'text'    => 'Movimientos (Entradas/Salidas)',
+        //'route'   => 'movimientos.index',
+        //'icon'    => 'fas fa-exchange-alt',
+        //'active'  => ['movimientos*'],
     ],
+//seccion de ventas 
+[
+    'text' => 'Ventas',
+    'icon' => 'fas fa-money-bill-alt',
+    'submenu' => [
+        [
+          //  'text' => 'Inventario',
+            //'url'  => 'inventario',
+            //'icon' => 'fas fa-boxes',
+        ],
+        [
+            'text' => 'Ventas Por producto',
+            'url'  => 'ventas-huawei',
+            'icon' => 'fas fa-chart-line',
+        ],
+        [
+            'text'=>'Facturas de Ventas',
+            'url'=>'facturas',
+            'icon'=>'fas fa-file-invoice'
 
-    ['header' => 'VENTAS'],
+        ],
+        [
 
-    [
-        'text' => 'Ventas',
-        'icon' => 'fas fa-money-bill-alt',
-        'submenu' => [
-
-            /*[
-                'text' => 'Ventas Por Producto',
-                'route' => 'ventas.huawei', // ✅ existe
-                'icon' => 'fas fa-chart-line',
-            ],*/
-
-            [
-                'text' => 'Ventas Detalle',
-                'route' => 'ventasd.index', // ✅ existe
-                'icon' => 'fas fa-chart-line',
-            ],
-             [
-                'text' => 'Ventas Factura',
-                'route' => 'ventasd.index', // ✅ existe
-                'icon' => 'fas fa-file-invoice',
-            ],
+            'text' => 'Ventas Detalle',
+            'url' => 'ventasd',
+            'icon' => 'fas fa-file-invoice'
         ],
     ],
+],
+    // Sección exclusiva para ROOT (gestión de usuarios)
+    ['header' => 'ADMINISTRACIÓN '],
 
-    ['header' => 'ADMINISTRACIÓN'],
+   [
+    'text'    => 'Usuarios',
+    'url'     => '/users',          // URL directa (sin nombre de ruta)
+    'icon'    => 'fas fa-users',
+    // comenta 'can' por ahora
+    // 'can'     => 'manage-users',
+    'active'  => ['users*'],
+],
 
-    [
-        'text'   => 'Usuarios',
-        'route'  => 'users.index',
-        'icon'   => 'fas fa-users',
-        //'can'    => 'manage-users',
-    ],
+[
+    'text'    => 'Nuevo Usuario',
+    'url'     => '/users/create',
+    'icon'    => 'fas fa-user-plus',
+    // 'can'     => 'manage-users',
+],
 
-    [
-        'text'  => 'Nuevo Usuario',
-        'route' => 'users.create',
-        'icon'  => 'fas fa-user-plus',
-        //'can'    => 'manage-users',
-    ],
 
+    // Perfil y logout (visible para todos)
     ['header' => 'CUENTA'],
 
     [
-        'text'  => 'Cambiar Contraseña',
-        'route' => 'profile.edit',
-        'icon'  => 'fas fa-user',
+        'text'    => 'Cambiar Contraseña',
+        'route'   => 'profile.edit',
+        'icon'    => 'fas fa-user',
     ],
+
+
 ],
+
     /*
     |--------------------------------------------------------------------------
     | Menu Filters

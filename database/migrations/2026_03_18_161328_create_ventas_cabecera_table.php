@@ -32,6 +32,7 @@ return new class extends Migration
                 $table->decimal('importe', 12, 2)->default(0);
                 $table->decimal('impuestos', 12, 2)->default(0);
                 $table->decimal('total', 12, 2)->default(0);
+               
                 // 🔹 Control
                 $table->timestamp('fecha_sync')->nullable(); 
                     });

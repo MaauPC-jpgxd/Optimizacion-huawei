@@ -20,7 +20,8 @@ class VentasCabecera extends Model
         'importe',
         'impuestos',
         'total',
-        'fecha_sync'
+        'fecha_sync',
+        'agente'
             ];
     protected $casts=[
         'fecha_emision'=> 'date',
@@ -28,7 +29,7 @@ class VentasCabecera extends Model
         'fecha_sync'=>'datetime',
         'importe'=>'decimal',
         'impuestos'=>'decimal',
-        'total'=>'decimal',
+        'total'=>'decimal:2',
     ];
     public function detalles (){
         return $this->hasMany(VentaDetalle::class,'ventas_cabecera');
