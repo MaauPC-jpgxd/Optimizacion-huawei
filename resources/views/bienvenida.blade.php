@@ -50,7 +50,7 @@
         <div class="card p-5">
             <!-- Tu logo -->
             <img src="{{ asset('img/Recurso 18@3x.png') }}" alt="Logo" class="logo mx-auto d-block">
-
+          
             <h1 class="mb-4 fw-bold">Bienvenido a</h1>
             <h2 class="mb-5">Optimización Corporativa</h2>
 

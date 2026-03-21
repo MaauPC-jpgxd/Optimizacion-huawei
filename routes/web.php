@@ -7,6 +7,7 @@ use App\Http\Controllers\VentaDetalleController;
 use App\Http\Controllers\passwordRecoveryController;
 use App\Http\Controllers\VentasCabeceraController;
 use App\Http\Controllers\VentasDController;
+use App\Http\Controllers\VentasCController;
 // Página de bienvenida pública (sin login)
 Route::get('/', function () {
     return view('bienvenida');
@@ -86,7 +87,7 @@ Route::get('/ventasd/excel', [VentasDController::class, 'exportExcel'])
 //ventas a pdf
 Route::get('/ventasd/pdf', [VentasDController::class, 'exportPDF'])
     ->name('ventasd.pdf');
-
+Route::get('/ventasc', [VentasCController::class, 'index'])->name('ventasc.index');
 });
 Route::get('/recovery', function () {
     return view('auth.recovery-request');
@@ -109,6 +110,6 @@ Route::get('/exito', function () {
     return view('auth.pasword-confirmation');
 })->name('pasword.confirmation');
 
-// Rutas de autenticación (ogin, register, etc.) que vienen de auth.php
+// Rutas de autenticación (login, register, etc.) que vienen de auth.php
 //no borres la de abajo se cae todo xd
 require __DIR__.'/auth.php';

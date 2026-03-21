@@ -334,7 +334,7 @@ return [
             ],
              [
                 'text' => 'Ventas Factura',
-                'route' => 'ventasd.index', // ✅ existe
+                'route' => 'ventasc.index', // ✅ existe
                 'icon' => 'fas fa-file-invoice',
             ],
         ],
