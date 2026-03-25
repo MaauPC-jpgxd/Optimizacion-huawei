@@ -66,10 +66,10 @@ use Illuminate\Support\Str;
                 <div class="col-md-2 mb-2">
                     <select name="sucursal" class="form-control">
                         <option value="">Sucursal</option>
-                        <option value="390" {{ request('sucursal') == '390' ? 'selected' : '' }}>390</option>
-                        <option value="400" {{ request('sucursal') == '400' ? 'selected' : '' }}>400</option>
-                        <option value="500" {{ request('sucursal') == '500' ? 'selected' : '' }}>500</option>
-                        <option value="600" {{ request('sucursal') == '600' ? 'selected' : '' }}>600</option>
+                        <option value="390" {{ request('sucursal') == '390' ? 'selected' : '' }}>390 MATRIZ HUAWEI OPTI</option>
+                        <option value="400" {{ request('sucursal') == '400' ? 'selected' : '' }}>400 HUAWEI ANTENAS OPTI</option>
+                        <option value="500" {{ request('sucursal') == '500' ? 'selected' : '' }}>500 HUAWEI NEZA OPTI</option>
+                        <option value="600" {{ request('sucursal') == '600' ? 'selected' : '' }}>600 HUAWEI TEZONTLE OPTI</option>
                     </select>
                 </div>
 

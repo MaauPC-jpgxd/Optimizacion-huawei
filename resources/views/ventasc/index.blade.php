@@ -6,6 +6,7 @@
     <h1 class="text-center font-weight-bold">
         <i class="fas fa-file-invoice-dollar"></i> Ventas Factura
     </h1>
+    
     <div class="bg-warning text-dark p-2 mt-2 rounded overflow-hidden">
     <div style="white-space: nowrap; display: inline-block; animation: mover 10s linear infinite;">
         ⚠️ Este módulo está en proceso de actualización y desarrollo, lamentamos las molestias.
@@ -136,7 +137,9 @@
                 <thead class="thead-dark text-center">
                     <tr>
                         <th>#</th>
-                        <th>Factura</th>
+                        <th>Folio</th>
+                        <!--<th>Sucursal</th>-->
+                        <!--<th>Almacen</th>-->
                         <th>Tipo</th>
                         <th>Fecha</th>
                         <th>Importe</th>
@@ -156,21 +159,24 @@
                         </td>
 
                         <td>
-                            <span class="badge badge-{{ $v->mov == 'Nota' ? 'warning' : 'success' }}">
-                                {{ $v->mov }}
+                            <span class="badge badge-{{ $v->Mov == 'Nota' ? 'warning' : 'success' }}">
+                                {{ $v->Mov }}
                             </span>
                         </td>
+                      
 
                         <td>
-                            {{ \Carbon\Carbon::parse($v->fecha_emision)->format('d/m/Y') }}
+                            {{ $v->FechaEmision 
+                                ? \Carbon\Carbon::parse($v->FechaEmision)->format('d/m/Y') 
+                                : '-' }}
                         </td>
 
                         <td>
-                            ${{ number_format($v->importe, 2) }}
+                            ${{ number_format($v->Importe ?? 0, 2) }}
                         </td>
 
                         <td>
-                            <strong>${{ number_format($v->total, 2) }}</strong>
+                            <strong>${{ number_format($v->Total ?? 0, 2) }}</strong>
                         </td>
                     </tr>
 
