@@ -31,7 +31,7 @@ use Illuminate\Support\Str;
     <div class="col-md-6">
         <div class="small-box bg-success shadow">
             <div class="inner">
-                <h3>{{ number_format($totalCantidad, 2) }}</h3>
+                <h3>{{ number_format($totalCantidad) }}</h3>
                 <p>Productos Vendidos</p>
             </div>
             <div class="icon">
@@ -66,7 +66,6 @@ use Illuminate\Support\Str;
                 <div class="col-md-2 mb-2">
                     <select name="sucursal" class="form-control">
                         <option value="">Sucursal</option>
-                        <option value="390" {{ request('sucursal') == '390' ? 'selected' : '' }}>390 MATRIZ HUAWEI OPTI</option>
                         <option value="400" {{ request('sucursal') == '400' ? 'selected' : '' }}>400 HUAWEI ANTENAS OPTI</option>
                         <option value="500" {{ request('sucursal') == '500' ? 'selected' : '' }}>500 HUAWEI NEZA OPTI</option>
                         <option value="600" {{ request('sucursal') == '600' ? 'selected' : '' }}>600 HUAWEI TEZONTLE OPTI</option>
@@ -77,7 +76,7 @@ use Illuminate\Support\Str;
                     <select name="tipo" class="form-control">
                         <option value="">Tipo</option>
                         <option value="Factura Electronica" {{ request('tipo') == 'Factura Electronica' ? 'selected' : '' }}>
-                            Factura Electrónica
+                            Factura Electronica
                         </option>
                         <option value="Nota" {{ request('tipo') == 'Nota' ? 'selected' : '' }}>
                             Nota
@@ -109,18 +108,16 @@ use Illuminate\Support\Str;
         </form>
     </div>
 </div>
+
+{{-- 📤 EXPORTAR --}}
 <div class="d-flex justify-content-end mb-3">
+    <a href="{{ route('ventasd.excel', request()->query()) }}" class="btn btn-success mr-2 shadow">
+        <i class="fas fa-file-excel"></i> Excel
+    </a>
 
-   <a href="{{ route('ventasd.excel', request()->query()) }}" 
-   class="btn btn-success mr-2 shadow">
-    <i class="fas fa-file-excel"></i> Excel
-</a>
-
- <a href="{{ route('ventasd.pdf', request()->query()) }}" 
-   class="btn btn-danger shadow">
-    <i class="fas fa-file-pdf"></i> PDF
-</a>
-
+    <a href="{{ route('ventasd.pdf', request()->query()) }}" class="btn btn-danger shadow">
+        <i class="fas fa-file-pdf"></i> PDF
+    </a>
 </div>
 
 {{-- 📊 TABLA --}}
@@ -134,16 +131,15 @@ use Illuminate\Support\Str;
                     <tr>
                         <th>#</th>
                         <th>Suc</th>
-                        <th>Articulo</th>
-                        <th>Descripcion</th>
+                        <th>Artículo</th>
+                        <th>Descripción</th>
                         <th>Cant</th>
-                        <th class="d-none d-lg-table-cell">Cliente</th>
-                        <th class="d-none d-lg-table-cell">Nombre</th>
-                        <th class="d-none d-xl-table-cell">Agente</th>
+                        <th>Cliente</th>
+                        <th>Nombre</th>
                         <th>Factura</th>
                         <th>Estatus</th>
-                        <th class="d-none d-md-table-cell">Tipo</th>
-                        <th class="d-none d-md-table-cell">Alm</th>
+                        <th>Tipo</th>
+                        <th>Alm</th>
                         <th>Fecha</th>
                     </tr>
                 </thead>
@@ -155,37 +151,24 @@ use Illuminate\Support\Str;
                         <td>{{ $ventas->firstItem() + $index }}</td>
 
                         <td>
-                            <span class="badge badge-info">{{ $v->Sucursal }}</span>
+                            <span class="badge badge-info">
+                                {{ $v->Sucursal }}
+                            </span>
                         </td>
 
-                        <td>
-                            <small>{{ $v->Articulo }}</small>
+                        <td>{{ $v->Articulo }}</td>
+
+                        <td style="max-width: 300px; word-wrap: break-word;">
+                            {{ $v->ArtDescripcion ?? '-' }}
                         </td>
 
-                        {{-- 🔥 DESCRIPCIÓN COMPLETA --}}
-                        <td style="max-width: 300px; white-space: normal; word-wrap: break-word;">
-                            <small>{{ $v->ArtDescripcion }}</small>
-                        </td>
+                        <td><strong>{{ $v->Cantidad }}</strong></td>
 
-                        <td>
-                            <strong>{{ $v->Cantidad }}</strong>
-                        </td>
+                        <td>{{ $v->Cliente }}</td>
 
-                        <td class="d-none d-lg-table-cell">
-                            <small>{{ $v->Cliente }}</small>
-                        </td>
+                        <td>{{ $v->CteNombre }}</td>
 
-                        <td class="d-none d-lg-table-cell">
-                            <small>{{ $v->CteNombre }}</small>
-                        </td>
-
-                        <td class="d-none d-xl-table-cell">
-                            <small>{{ $v->Agente }}</small>
-                        </td>
-
-                        <td>
-                            <small>{{ $v->MovID }}</small>
-                        </td>
+                        <td>{{ $v->MovID }}</td>
 
                         <td>
                             <span class="badge badge-{{ $v->Estatus == 'CONCLUIDO' ? 'success' : 'warning' }}">
@@ -193,23 +176,19 @@ use Illuminate\Support\Str;
                             </span>
                         </td>
 
-                        <td class="d-none d-md-table-cell">
-                            <small>{{ $v->Mov }}</small>
-                        </td>
+                        <td>{{ $v->Mov }}</td>
 
-                        <td class="d-none d-md-table-cell">
-                            <small>{{ $v->Almacen }}</small>
-                        </td>
+                        <td>{{ $v->Almacen }}</td>
 
                         <td>
-                            <small>{{ \Carbon\Carbon::parse($v->FechaEmision)->format('d/m/Y') }}</small>
+                            {{ \Carbon\Carbon::parse($v->FechaEmision)->format('d/m/Y') }}
                         </td>
 
                     </tr>
 
                     @empty
                     <tr>
-                        <td colspan="13" class="text-center text-muted">
+                        <td colspan="12" class="text-center text-muted">
                             No hay resultados
                         </td>
                     </tr>
@@ -221,6 +200,7 @@ use Illuminate\Support\Str;
 
     </div>
 
+    {{-- 🔥 PAGINACIÓN --}}
     <div class="card-footer text-center">
         {{ $ventas->links('pagination::bootstrap-4') }}
     </div>

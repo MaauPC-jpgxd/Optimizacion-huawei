@@ -3,6 +3,18 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
+ <div class="bg-warning text-dark p-2 mt-2 rounded overflow-hidden">
+    <div style="white-space: nowrap; display: inline-block; animation: mover 10s linear infinite;">
+        ⚠️  La información mostrada corresponde al corte del día anterior. ⚠️
+    </div>
+</div>
+
+<style>
+@keyframes mover {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+</style>
 @stop
 
 @section('content')

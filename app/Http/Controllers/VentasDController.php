@@ -10,119 +10,98 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class VentasDController extends Controller
 {
-   public function index(Request $request)
-{
-    $query = VentasD::query();
+    public function index(Request $request)
+    {
+        $query = $this->getVentasFiltradas($request);
 
-    // 🔍 FILTROS
-    if ($request->filled('sucursal')) {
-        $query->where('Sucursal', $request->sucursal);
+        // 🔥 STATS
+        $statsQuery = clone $query;
+
+        $totalFacturas = $statsQuery->distinct('MovID')->count('MovID');
+
+        $totalCantidad = (clone $query)
+            ->selectRaw("
+                SUM(
+                    CASE 
+                        WHEN ISNUMERIC(Cantidad) = 1 
+                        THEN CAST(Cantidad AS DECIMAL(18,2)) 
+                        ELSE 0 
+                    END
+                ) as total
+            ")
+            ->value('total');
+
+        // 🔥 PAGINACIÓN (CLAVE)
+        $ventas = $query
+            ->orderBy('FechaEmision', 'desc')
+            ->paginate(20)
+            ->withQueryString(); // 🔥 IMPORTANTE
+
+        return view('ventasd.index', compact(
+            'ventas',
+            'totalFacturas',
+            'totalCantidad'
+        ));
     }
 
-    if ($request->filled('articulo')) {
-        $query->where('Articulo', 'like', '%' . $request->articulo . '%');
-    }
-
-    if ($request->filled('cliente')) {
-        $query->where('Cliente', 'like', '%' . $request->cliente . '%');
-    }
-
-    if ($request->filled('estatus')) {
-        $query->where('Estatus', $request->estatus);
-    }
-
-    // 🔥 FILTRO TIPO (FIX REAL)
-    if ($request->filled('tipo')) {
-
-        if ($request->tipo == 'Factura Electronica') {
-            $query->where('Mov', 'like', '%Factura%');
-        }
-
-        if ($request->tipo == 'Nota') {
-            $query->where('Mov', 'like', '%Nota%');
-        }
-    }
-
-    if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
-        $query->whereBetween('FechaEmision', [
-            $request->fecha_inicio,
-            $request->fecha_fin
-        ]);
-    }
-
-    // 🔥 CLON PARA ESTADÍSTICAS
-    $statsQuery = clone $query;
-
-    // 📊 TOTAL FACTURAS
-    $totalFacturas = $statsQuery->distinct('MovID')->count('MovID');
-
-    // 📊 TOTAL CANTIDAD (SQL SERVER FIX)
-    $totalCantidad = (clone $query)
-        ->selectRaw("
-            SUM(
-                CASE 
-                    WHEN ISNUMERIC(Cantidad) = 1 
-                    THEN CAST(Cantidad AS DECIMAL(18,2)) 
-                    ELSE 0 
-                END
-            ) as total
-        ")
-        ->value('total');
-
-    // 🔹 DATOS PRINCIPALES
-    $ventas = $query->orderBy('FechaEmision', 'desc')->paginate(20);
-
-    return view('ventasd.index', compact(
-        'ventas',
-        'totalFacturas',
-        'totalCantidad'
-    ));
-}
-
-    // (Aún no usados pero listos)
+    // ================= EXPORT EXCEL =================
     public function exportExcel(Request $request)
     {
-        return Excel::download(new VentasDExport($request), 'ventas.xlsx');
+        $ventas = $this->getVentasFiltradas($request)->get();
+
+        return Excel::download(new VentasDExport($ventas), 'ventas_detalle.xlsx');
     }
 
-   public function exportPDF(Request $request)
-{
-    $query = VentasD::query();
+    // ================= EXPORT PDF =================
+    public function exportPDF(Request $request)
+    {
+        $ventas = $this->getVentasFiltradas($request)->get();
 
-    // 🔍 FILTROS (igual que index)
-    if ($request->filled('sucursal')) {
-        $query->where('Sucursal', $request->sucursal);
+        $pdf = Pdf::loadView('ventasd.pdf', compact('ventas'))
+            ->setPaper('A4', 'landscape');
+
+        return $pdf->download('ventas_detalle.pdf');
     }
 
-    if ($request->filled('articulo')) {
-        $query->where('Articulo', 'like', '%' . $request->articulo . '%');
+    // ================= QUERY CENTRAL 🔥 =================
+    private function getVentasFiltradas($request)
+    {
+        $query = VentasD::query();
+
+        if ($request->filled('sucursal')) {
+            $query->where('Sucursal', $request->sucursal);
+        }
+
+        if ($request->filled('articulo')) {
+            $query->where('Articulo', 'like', '%' . $request->articulo . '%');
+        }
+
+        if ($request->filled('cliente')) {
+            $query->where('Cliente', 'like', '%' . $request->cliente . '%');
+        }
+
+        if ($request->filled('estatus')) {
+            $query->where('Estatus', $request->estatus);
+        }
+
+        // 🔥 FIX TIPO
+        if ($request->filled('tipo')) {
+            if ($request->tipo == 'Factura Electronica') {
+                $query->where('Mov', 'like', '%Factura%');
+            }
+
+            if ($request->tipo == 'Nota') {
+                $query->where('Mov', 'like', '%Nota%');
+            }
+        }
+
+        if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+            $query->whereBetween('FechaEmision', [
+                $request->fecha_inicio,
+                $request->fecha_fin
+            ]);
+        }
+
+        return $query;
     }
-
-    if ($request->filled('cliente')) {
-        $query->where('Cliente', 'like', '%' . $request->cliente . '%');
-    }
-
-    if ($request->filled('estatus')) {
-        $query->where('Estatus', $request->estatus);
-    }
-
-    if ($request->filled('tipo')) {
-        $query->where('Mov', 'like', '%' . $request->tipo . '%');
-    }
-
-    if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
-        $query->whereBetween('FechaEmision', [
-            $request->fecha_inicio,
-            $request->fecha_fin
-        ]);
-    }
-
-    $ventas = $query->get();
-
-    //$pdf = Pdf::loadView('ventasd.pdf', compact('ventas'));
-    $pdf = Pdf::loadView('ventasd.pdf', compact('ventas'))
-          ->setPaper('A4', 'landscape');
-
-    return $pdf->download('ventas.pdf');
-}
 }

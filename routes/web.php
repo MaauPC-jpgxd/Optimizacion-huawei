@@ -89,6 +89,9 @@ Route::get('/ventasd/pdf', [VentasDController::class, 'exportPDF'])
     ->name('ventasd.pdf');
 Route::get('/ventasc', [VentasCController::class, 'index'])->name('ventasc.index');
 });
+//exel y pdf de facturas
+Route::get('ventasc/excel', [VentasCController::class, 'exportExcel'])->name('ventasc.excel');
+Route::get('ventasc/pdf', [VentasCController::class, 'exportPdf'])->name('ventasc.pdf');
 Route::get('/recovery', function () {
     return view('auth.recovery-request');
     //dd('si jala xd');

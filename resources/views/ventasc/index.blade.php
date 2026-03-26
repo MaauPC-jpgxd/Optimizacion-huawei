@@ -6,7 +6,7 @@
     <h1 class="text-center font-weight-bold">
         <i class="fas fa-file-invoice-dollar"></i> Ventas Factura
     </h1>
-    
+    <!--
     <div class="bg-warning text-dark p-2 mt-2 rounded overflow-hidden">
     <div style="white-space: nowrap; display: inline-block; animation: mover 10s linear infinite;">
         ⚠️ Este módulo está en proceso de actualización y desarrollo, lamentamos las molestias.
@@ -18,7 +18,7 @@
     0% { transform: translateX(100%); }
     100% { transform: translateX(-100%); }
 }
-</style>
+</style>-->
 @stop
 
 @section('content')
@@ -77,14 +77,14 @@
 
                 <div class="col-md-2 mb-2">
                     <input type="text" name="movid" class="form-control"
-                        placeholder="Factura" value="{{ request('movid') }}">
+                        placeholder="Ingrese Folio" value="{{ request('movid') }}">
                 </div>
 
                 <div class="col-md-2 mb-2">
                     <select name="tipo" class="form-control">
                         <option value="">Tipo</option>
                         <option value="Factura Electronica" {{ request('tipo') == 'Factura Electronica' ? 'selected' : '' }}>
-                            Factura
+                            Factura Electronica
                         </option>
                         <option value="Nota" {{ request('tipo') == 'Nota' ? 'selected' : '' }}>
                             Nota
@@ -101,12 +101,18 @@
                     <input type="date" name="fecha_fin" class="form-control"
                         value="{{ request('fecha_fin') }}">
                 </div>
-
+                        <div class="col-md-2 mb-2">
+                        <select name="sucursal" class="form-control">
+                            <option value="">Sucursal</option>
+                            <option value="400" {{ request('sucursal') == '400' ? 'selected' : '' }}>400 HUAWEI ANTENAS OPTI</option>
+                            <option value="500" {{ request('sucursal') == '500' ? 'selected' : '' }}>500 HUAWEI NEZA OPTI</option>
+                            <option value="600" {{ request('sucursal') == '600' ? 'selected' : '' }}>600 HUAWEI TEZONTLE OPTI</option>
+                        </select>
+                    </div>
                 <div class="col-md-2 mb-2">
                     <input type="number" step="0.01" name="importe_min" class="form-control"
                         placeholder="Min $" value="{{ request('importe_min') }}">
                 </div>
-
                 <div class="col-md-2 mb-2">
                     <input type="number" step="0.01" name="importe_max" class="form-control"
                         placeholder="Max $" value="{{ request('importe_max') }}">
@@ -121,12 +127,21 @@
                         <i class="fas fa-broom"></i> Limpiar
                     </a>
                 </div>
+             
 
             </div>
         </form>
     </div>
 </div>
 
+   <a href="{{ route('ventasc.excel', request()->query()) }}" 
+   class="btn btn-success mr-2 shadow">
+    <i class="fas fa-file-excel"></i> Excel
+</a>
+ <a href="{{ route('ventasc.pdf', request()->query()) }}" 
+   class="btn btn-danger shadow">
+    <i class="fas fa-file-pdf"></i> PDF
+</a><br>
 {{-- 📊 TABLA --}}
 <div class="card shadow-sm">
     <div class="card-body p-0">
@@ -138,9 +153,9 @@
                     <tr>
                         <th>#</th>
                         <th>Folio</th>
-                        <!--<th>Sucursal</th>-->
-                        <!--<th>Almacen</th>-->
                         <th>Tipo</th>
+                        <th>Sucursal</th>
+                        <th>Almacen</th>
                         <th>Fecha</th>
                         <th>Importe</th>
                         <th>Total</th>
@@ -163,7 +178,17 @@
                                 {{ $v->Mov }}
                             </span>
                         </td>
-                      
+                                                <td>
+                            <span class="badge badge-secondary">
+                                {{ $v->Sucursal }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge badge-dark">
+                                {{ $v->Almacen }}
+                            </span>
+                        </td>
 
                         <td>
                             {{ $v->FechaEmision 

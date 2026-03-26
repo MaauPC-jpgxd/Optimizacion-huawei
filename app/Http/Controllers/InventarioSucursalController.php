@@ -11,90 +11,80 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class InventarioSucursalController extends Controller
 {
-public function index(Request $request)
-{
-    $sucursalId = $request->sucursal;
+    public function index(Request $request)
+    {
+        $query = InventarioSucursal::with('producto');
 
-    $query = InventarioSucursal::with('producto')
-        ->whereHas('producto', function ($q) {
-            $q->where('descripcion', 'like', '%HUAWEI%');
+        // 🔥 FILTRO HUAWEI (MUCHO MÁS FLEXIBLE)
+        $query->where(function ($q) {
+            $q->whereHas('producto', function ($q2) {
+                $q2->where('descripcion', 'like', '%HUAWEI%');
+            })
+            ->orWhere('articulo', 'like', '%HUAWEI%'); // fallback 🔥
         });
 
-    if ($sucursalId) {
-        $query->whereRaw('FLOOR(almacen) = ?', [$sucursalId]);
-    }
-
-    $inventarios = $query
-        ->orderByDesc('existencias')
-        ->get();
-
-    $sucursales = Sucursal::all();
-
-    return view('inventario.index', compact(
-        'inventarios',
-        'sucursales',
-        'sucursalId'
-    ));
-}
-    // Solo root puede acceder a estas acciones (editar, etc.)
-    public function edit($id)
-    {
-        $this->authorizeRoot();
-
-        $item = InventarioSucursal::findOrFail($id);
-        return view('inventario.edit', compact('item'));
-    }
-
-    // ... más adelante puedes agregar update, movimientos, etc.
-
-    private function authorizeRoot()
-    {
-        if (auth()->user()->role !== 'root') {
-            abort(403, 'Solo el usuario root puede editar inventario.');
+        // 🔍 SUCURSAL
+        if ($request->filled('sucursal')) {
+            $query->whereRaw('FLOOR(almacen) = ?', [$request->sucursal]);
         }
-    }
-    private function filtrarInventario($request)
-{
-    $query = InventarioSucursal::with('producto');
 
-    if ($request->filled('sucursal')) {
-        $query->whereRaw('FLOOR(almacen) = ?', [$request->sucursal]);
-    }
+        // 🔍 BUSCADOR
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
 
-    return $query->get();
-}
-public function exportExcel(Request $request)
-{
-    $sucursalId = $request->sucursal;
+            $query->where(function ($q) use ($buscar) {
+                $q->where('articulo', 'like', "%$buscar%")
+                  ->orWhereHas('producto', function ($q2) use ($buscar) {
+                      $q2->where('descripcion', 'like', "%$buscar%");
+                  });
+            });
+        }
 
-    $query = InventarioSucursal::with('producto')
-        ->whereHas('producto', function ($q) {
-            $q->where('descripcion', 'like', '%HUAWEI%');
+        // 🔥 SOLO PRODUCTOS REALES
+        $query->where(function ($q) {
+            $q->where('existencias', '>', 0)
+              ->orWhere('disponible', '>', 0);
         });
 
-    if ($sucursalId) {
-        $query->where('sucursal', $sucursalId);
+        $inventarios = $query
+            ->orderByDesc('existencias')
+            ->paginate(15)
+            ->withQueryString();
+
+        // 📊 CARDS
+        $totalProductos = $inventarios->total();
+        $totalDisponible = $query->sum('disponible');
+        $totalExistencias = $query->sum('existencias');
+
+        $sucursales = Sucursal::all();
+
+        return view('inventario.index', compact(
+            'inventarios',
+            'sucursales',
+            'totalProductos',
+            'totalDisponible',
+            'totalExistencias'
+        ));
     }
 
-    $inventarios = $query->get();
-
-    return Excel::download(new InventarioExport($inventarios), 'inventario_huawei.xlsx');
-}
-public function exportPdf(Request $request)
-{
-    $sucursalId = $request->sucursal;
-
-    $query = InventarioSucursal::with('producto')
-        ->whereHas('producto', function ($q) {
-            $q->where('descripcion', 'like', '%HUAWEI%');
-        });
-
-    if ($sucursalId) {
-        $query->where('sucursal', $sucursalId);
+    public function exportExcel(Request $request)
+    {
+        return Excel::download(
+            new InventarioExport($this->getData($request)),
+            'inventario_huawei.xlsx'
+        );
     }
 
-    $inventarios = $query->get();
-   $pdf = PDF::loadView('exports.inventario_pdf', compact('inventarios'));
-    return $pdf->download('inventario_huawei.pdf');
-}
+    public function exportPdf(Request $request)
+    {
+        $data = $this->getData($request);
+        $inventarios = $this->getData($request);
+        $pdf = Pdf::loadView('exports.inventario_pdf', compact('inventarios'));
+        return $pdf->download('inventario_huawei.pdf');
+    }
+
+    private function getData($request)
+    {
+        return InventarioSucursal::with('producto')->get();
+    }
 }
