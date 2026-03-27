@@ -8,132 +8,176 @@
         body {
             font-family: Arial, sans-serif;
             font-size: 10px;
+            color: #333;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .logo {
-            width: 140px;
+            width: 130px;
             margin-bottom: 5px;
         }
 
         h2 {
-            margin: 2px 0;
+            margin: 0;
+            font-size: 16px;
+            color: #0d6efd;
         }
 
-        p {
-            margin: 2px;
+        .info {
             font-size: 9px;
+            margin-top: 3px;
+        }
+
+        .line {
+            border-top: 2px solid #0d6efd;
+            margin: 10px 0;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed;
         }
 
         th {
             background-color: #0d6efd;
             color: white;
-            padding: 5px;
+            padding: 6px;
             font-size: 9px;
         }
 
         td {
-            padding: 4px;
-            font-size: 8px;
+            padding: 5px;
+            font-size: 9px;
             text-align: center;
         }
 
         table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .money {
+            text-align: right;
+            padding-right: 8px;
+        }
+
+        .footer {
+            margin-top: 10px;
+            font-size: 10px;
+        }
+
+        .totales {
+            margin-top: 10px;
+            width: 40%;
+            float: right;
+            border-collapse: collapse;
+        }
+
+        .totales td {
             border: 1px solid #ccc;
+            padding: 6px;
+            font-size: 10px;
         }
 
-        .desc {
+        .totales .label {
+            background-color: #f5f5f5;
+            font-weight: bold;
             text-align: left;
-            word-wrap: break-word;
-            width: 120px;
         }
 
-        .small { width: 55px; }
-        .medium { width: 80px; }
-        .wide { width: 100px; }
+        .totales .value {
+            text-align: right;
+        }
     </style>
 </head>
 
 <body>
 
     <div class="header">
-        {{-- ⚠️ IMPORTANTE: valida que exista la imagen --}}
         <img src="{{ public_path('img/Recurso 18@3x.png') }}" class="logo">
 
         <h2>Reporte de Ventas Factura</h2>
 
-        <p>Fecha: {{ now()->format('d/m/Y') }}</p>
-
-        {{-- 🔥 EXTRA PRO: total registros --}}
-        <p>Total registros: {{ count($ventas) }}</p>
+        <div class="info">
+            Fecha de generación: {{ now()->format('d/m/Y') }} <br>
+            Total registros: {{ count($ventas) }}
+        </div>
     </div>
+
+    <div class="line"></div>
 
     <table>
         <thead>
             <tr>
-                <th class="small">Suc</th>
-                <th class="medium">Artículo</th>
-                <th class="desc">Descripción</th>
-                <th class="small">Cant</th>
-                <th class="medium">Cliente</th>
-                <th class="wide">Nombre</th>
-                <th class="medium">Factura</th>
-                <th class="small">Estatus</th>
-                <th class="small">Tipo</th>
-                <th class="small">Alm</th>
-                <th class="medium">Fecha</th>
+                <th>Folio</th>
+                <th>Tipo</th>
+                <th>Sucursal</th>
+                <th>Almacén</th>
+                <th>Fecha</th>
+                <th>Importe</th>
+                <th>Total</th>
             </tr>
         </thead>
 
         <tbody>
+            @php
+                $sumaImporte = 0;
+                $sumaTotal = 0;
+            @endphp
+
             @forelse($ventas as $v)
-            <tr>
-                <td>{{ $v->Sucursal }}</td>
 
-                <td>{{ $v->Articulo ?? '-' }}</td>
+                @php
+                    $sumaImporte += $v->Importe ?? 0;
+                    $sumaTotal += $v->Total ?? 0;
+                @endphp
 
-                <td class="desc">
-                    {{ $v->ArtDescripcion ?? 'Sin descripción' }}
-                </td>
+                <tr>
+                    <td>{{ $v->MovID }}</td>
+                    <td>{{ $v->Mov }}</td>
+                    <td>{{ $v->Sucursal }}</td>
+                    <td>{{ $v->Almacen }}</td>
 
-                <td>{{ number_format($v->Cantidad ?? 0, 0) }}</td>
+                    <td>
+                        {{ $v->FechaEmision 
+                            ? \Carbon\Carbon::parse($v->FechaEmision)->format('d/m/Y') 
+                            : '-' }}
+                    </td>
 
-                <td>{{ $v->Cliente ?? '-' }}</td>
+                    <td class="money">
+                        ${{ number_format($v->Importe ?? 0, 2) }}
+                    </td>
 
-                <td>
-                    {{ $v->CteNombre ?? 'N/A' }}
-                </td>
+                    <td class="money">
+                        <strong>${{ number_format($v->Total ?? 0, 2) }}</strong>
+                    </td>
+                </tr>
 
-                <td>{{ $v->MovID }}</td>
-
-                <td>{{ $v->Estatus ?? '-' }}</td>
-
-                <td>{{ $v->Mov }}</td>
-
-                <td>{{ $v->Almacen ?? '-' }}</td>
-
-                <td>
-                    {{ $v->FechaEmision 
-                        ? \Carbon\Carbon::parse($v->FechaEmision)->format('d/m/Y') 
-                        : '-' }}
-                </td>
-            </tr>
             @empty
-            <tr>
-                <td colspan="11">Sin registros</td>
-            </tr>
+                <tr>
+                    <td colspan="7">Sin registros</td>
+                </tr>
             @endforelse
         </tbody>
+    </table>
+
+    {{-- 🔥 TOTALES --}}
+    <table class="totales">
+        <tr>
+            <td class="label">Total Importe</td>
+            <td class="value">${{ number_format($sumaImporte, 2) }}</td>
+        </tr>
+        <tr>
+            <td class="label">Total General</td>
+            <td class="value"><strong>${{ number_format($sumaTotal, 2) }}</strong></td>
+        </tr>
     </table>
 
 </body>
