@@ -306,14 +306,19 @@ return [
         'icon'   => 'fas fa-tachometer-alt',
     ],
 
-    ['header' => 'PRODUCTOS'],
+    //['header' => 'Inventario'],
 
-    [
+    /*[
         'text'   => 'Productos en Sucursales',
         'route'  => 'inventario.index',
         'icon'   => 'fas fa-warehouse',
-    ],
+    ],*/
+    [
+        'text'=>'Inventario',
+        'route'=>'articulos.index',
+        'icon'=>'fas fa-box',
 
+    ],
     ['header' => 'VENTAS'],
 
     [

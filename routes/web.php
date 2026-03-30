@@ -8,6 +8,7 @@ use App\Http\Controllers\passwordRecoveryController;
 use App\Http\Controllers\VentasCabeceraController;
 use App\Http\Controllers\VentasDController;
 use App\Http\Controllers\VentasCController;
+use App\Http\Controllers\ArticuloController;
 // Página de bienvenida pública (sin login)
 Route::get('/', function () {
     return view('bienvenida');
@@ -88,6 +89,12 @@ Route::get('/ventasd/excel', [VentasDController::class, 'exportExcel'])
 Route::get('/ventasd/pdf', [VentasDController::class, 'exportPDF'])
     ->name('ventasd.pdf');
 Route::get('/ventasc', [VentasCController::class, 'index'])->name('ventasc.index');
+//rutas de articulos la de a devis 
+Route::get('/articulos', [ArticuloController::class, 'index'])->name('articulos.index');
+Route::get('/articulos/excel', [ArticuloController::class, 'exportExcel'])
+    ->name('articulos.excel');
+Route::get('/articulos/pdf', [ArticuloController::class, 'exportPDF'])
+    ->name('articulos.pdf');
 });
 //exel y pdf de facturas
 Route::get('ventasc/excel', [VentasCController::class, 'exportExcel'])->name('ventasc.excel');
