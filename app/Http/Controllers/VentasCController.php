@@ -36,22 +36,26 @@ class VentasCController extends Controller
     }
 
     // ================= EXPORT EXCEL =================
-    public function exportExcel(Request $request)
+   public function exportExcel(Request $request)
     {
-        $ventas = $this->getVentasFiltradas($request)->get();
+            $ventas = $this->getVentasFiltradas($request)
+                ->orderBy('FechaEmision', 'desc') // 🔥 CLAVE
+                ->get();
 
-        return Excel::download(new VentasExport($ventas), 'ventas_factura.xlsx');
+            return Excel::download(new VentasExport($ventas), 'ventas_factura.xlsx');
     }
 
     // ================= EXPORT PDF =================
     public function exportPdf(Request $request)
-    {
-        $ventas = $this->getVentasFiltradas($request)->get();
+{
+    $ventas = $this->getVentasFiltradas($request)
+        ->orderBy('FechaEmision', 'desc') // 🔥 CLAVE
+        ->get();
 
-        $pdf = Pdf::loadView('exports.ventas_pdf', compact('ventas'));
+    $pdf = Pdf::loadView('exports.ventas_pdf', compact('ventas'));
 
-        return $pdf->download('ventas_factura.pdf');
-    }
+    return $pdf->download('ventas_factura.pdf');
+}
 
     // ================= QUERY CENTRAL 🔥 =================
     private function getVentasFiltradas($request)

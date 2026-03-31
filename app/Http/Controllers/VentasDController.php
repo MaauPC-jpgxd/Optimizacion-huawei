@@ -47,61 +47,64 @@ class VentasDController extends Controller
     // ================= EXPORT EXCEL =================
     public function exportExcel(Request $request)
     {
-        $ventas = $this->getVentasFiltradas($request)->get();
+        $ventas = $this->getVentasFiltradas($request)
+    ->orderBy('FechaEmision', 'desc') // 🔥 ORDEN REAL
+    ->get();
 
-        return Excel::download(new VentasDExport($ventas), 'ventas_detalle.xlsx');
+    return Excel::download(new VentasDExport($ventas), 'ventas_detalle.xlsx');
     }
 
     // ================= EXPORT PDF =================
-    public function exportPDF(Request $request)
-    {
-        $ventas = $this->getVentasFiltradas($request)->get();
+  public function exportPDF(Request $request)
+{
+    $ventas = $this->getVentasFiltradas($request)
+        ->orderBy('FechaEmision', 'desc') // 🔥 MISMO ORDEN QUE LA VISTA
+        ->get();
 
-        $pdf = Pdf::loadView('ventasd.pdf', compact('ventas'))
-            ->setPaper('A4', 'landscape');
+    $pdf = Pdf::loadView('ventasd.pdf', compact('ventas'))
+        ->setPaper('A4', 'landscape');
 
-        return $pdf->download('ventas_detalle.pdf');
-    }
+    return $pdf->download('ventas_detalle.pdf');
+}
 
     // ================= QUERY CENTRAL 🔥 =================
-    private function getVentasFiltradas($request)
-    {
-        $query = VentasD::query();
+   private function getVentasFiltradas($request)
+{
+    $query = \DB::table('Ventas_d'); // 🔥 CAMBIO IMPORTANTE
 
-        if ($request->filled('sucursal')) {
-            $query->where('Sucursal', $request->sucursal);
-        }
-
-        if ($request->filled('articulo')) {
-            $query->where('Articulo', 'like', '%' . $request->articulo . '%');
-        }
-
-        if ($request->filled('cliente')) {
-            $query->where('Cliente', 'like', '%' . $request->cliente . '%');
-        }
-
-        if ($request->filled('estatus')) {
-            $query->where('Estatus', $request->estatus);
-        }
-
-        // 🔥 FIX TIPO
-        if ($request->filled('tipo')) {
-            if ($request->tipo == 'Factura Electronica') {
-                $query->where('Mov', 'like', '%Factura%');
-            }
-
-            if ($request->tipo == 'Nota') {
-                $query->where('Mov', 'like', '%Nota%');
-            }
-        }
-
-        if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
-            $query->whereBetween('FechaEmision', [
-                $request->fecha_inicio,
-                $request->fecha_fin
-            ]);
-        }
-
-        return $query;
+    if ($request->filled('sucursal')) {
+        $query->where('Sucursal', $request->sucursal);
     }
+
+    if ($request->filled('articulo')) {
+        $query->where('Articulo', 'like', '%' . $request->articulo . '%');
+    }
+
+    if ($request->filled('cliente')) {
+        $query->where('Cliente', 'like', '%' . $request->cliente . '%');
+    }
+
+    if ($request->filled('estatus')) {
+        $query->where('Estatus', $request->estatus);
+    }
+
+    if ($request->filled('tipo')) {
+        if ($request->tipo == 'Factura Electronica') {
+            $query->where('Mov', 'like', '%Factura%');
+        }
+
+        if ($request->tipo == 'Nota') {
+            $query->where('Mov', 'like', '%Nota%');
+        }
+    }
+
+    if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+        $query->whereBetween('FechaEmision', [
+            $request->fecha_inicio,
+            $request->fecha_fin
+        ]);
+    }
+
+    return $query;
+}
 }
