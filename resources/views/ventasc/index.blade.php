@@ -79,19 +79,7 @@
                     <input type="text" name="movid" class="form-control"
                         placeholder="Ingrese Folio" value="{{ request('movid') }}">
                 </div>
-
-                <div class="col-md-2 mb-2">
-                    <select name="tipo" class="form-control">
-                        <option value="">Tipo</option>
-                        <option value="Factura Electronica" {{ request('tipo') == 'Factura Electronica' ? 'selected' : '' }}>
-                            Factura Electronica
-                        </option>
-                        <option value="Nota" {{ request('tipo') == 'Nota' ? 'selected' : '' }}>
-                            Nota
-                        </option>
-                    </select>
-                </div>
-
+     
                 <div class="col-md-2 mb-2">
                     <input type="date" name="fecha_inicio" class="form-control"
                         value="{{ request('fecha_inicio') }}">
