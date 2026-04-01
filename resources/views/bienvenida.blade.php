@@ -65,5 +65,24 @@
     </div>
     <!-- Bootstrap JS (opcional, para interacciones) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!--
+    <button id="installBtn" class="btn btn-primary">
+    📲 Instalar App
+</button>
+
+<script>
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+});
+
+document.getElementById('installBtn').addEventListener('click', async () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+    }
+});
+</script>-->
 </body>
 </html>
