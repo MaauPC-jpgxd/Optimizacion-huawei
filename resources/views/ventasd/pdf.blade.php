@@ -90,10 +90,11 @@
                 <th class="small">Cant</th>
                 <th class="medium">Cliente</th>
                 <th class="wide">Nombre</th>
+                <th class="medium">Agente</th>
                 <th class="medium">Factura</th>
                 <th class="small">Estatus</th>
                 <th class="small">Tipo</th>
-                <th class="small">Alm</th>
+                <th class="small">Almacen</th>
                 <th class="medium">Fecha</th>
             </tr>
         </thead>
@@ -111,6 +112,7 @@
                 <td>{{ $v->Cantidad }}</td>
                 <td>{{ $v->Cliente }}</td>
                 <td>{{ $v->CteNombre }}</td>
+                <td>{{$v->Agente}}</td>
                 <td>{{ $v->MovID }}</td>
                 <td>{{ $v->Estatus }}</td>
                 <td>{{ $v->Mov }}</td>

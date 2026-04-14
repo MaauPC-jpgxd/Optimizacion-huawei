@@ -53,9 +53,9 @@ use Illuminate\Support\Str;
         <form method="GET">
             <div class="row">
 
-                <div class="col-md-2 mb-2">
+                <div class="col-md-4 mb-2">
                     <input type="text" name="articulo" class="form-control"
-                        placeholder="Artículo" value="{{ request('articulo') }}">
+                        placeholder="🔎 Buscar artículo o descripción" value="{{ request('articulo') }}">
                 </div>
 
                 <div class="col-md-2 mb-2">
@@ -125,10 +125,11 @@ use Illuminate\Support\Str;
                         <th>Cant</th>
                         <th>Cliente</th>
                         <th>Nombre</th>
+                        <th>Agente</th>
                         <th>Factura</th>
                         <th>Estatus</th>
                         <th>Tipo</th>
-                        <th>Alm</th>
+                        <th>Almacen</th>
                         <th>Fecha</th>
                     </tr>
                 </thead>
@@ -156,7 +157,7 @@ use Illuminate\Support\Str;
                         <td>{{ $v->Cliente }}</td>
 
                         <td>{{ $v->CteNombre }}</td>
-
+                        <td>{{$v->Agente}}</td>
                         <td>{{ $v->MovID }}</td>
 
                         <td>

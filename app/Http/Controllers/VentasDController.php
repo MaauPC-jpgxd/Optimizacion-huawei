@@ -70,15 +70,20 @@ class VentasDController extends Controller
     // ================= QUERY CENTRAL 🔥 =================
    private function getVentasFiltradas($request)
 {
-    $query = \DB::table('Ventas_d'); // 🔥 CAMBIO IMPORTANTE
+    $query = \DB::table('Ventas_d'); 
 
     if ($request->filled('sucursal')) {
         $query->where('Sucursal', $request->sucursal);
     }
 
     if ($request->filled('articulo')) {
-        $query->where('Articulo', 'like', '%' . $request->articulo . '%');
-    }
+        $buscar = $request->articulo;
+
+        $query->where(function ($q) use ($buscar) {
+            $q->where('Articulo', 'like', "%$buscar%")
+            ->orWhere('ArtDescripcion', 'like', "%$buscar%");
+        });
+            }
 
     if ($request->filled('cliente')) {
         $query->where('Cliente', 'like', '%' . $request->cliente . '%');

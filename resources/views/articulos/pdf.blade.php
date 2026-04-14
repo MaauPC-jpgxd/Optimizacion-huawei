@@ -109,10 +109,10 @@
             @endphp
             <tr>
                 <td>{{ $a->Articulo }}</td>
-                <td class="desc">{{ $a->Descripcion1 }}</td>
+                <td class="desc">{{ $a->DescripcionCompleta  }}</td>
                 <td>{{ $a->Categoria }}</td>
                 <td>{{ $a->Fabricante }}</td>
-                <td>{{ $a->Almacen }}</td>
+                <td>{{ $a->almacen }}</td>
                 <td>{{ $a->existencias ?? 0 }}</td>
                 <td>{{ $a->disponible ?? 0 }}</td>
                 <td>{{ $a->Estatus }}</td>
