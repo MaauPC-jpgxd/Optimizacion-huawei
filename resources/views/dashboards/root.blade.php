@@ -24,7 +24,7 @@
                 style="color: #003366; letter-spacing: -1px;">
                 ¡Bienvenid@, {{ auth()->user()->name }}!
             </h1>
-
+            
             <p class="lead text-muted mb-4"
                style="font-size: 1.3rem; line-height: 1.7; max-width: 720px; margin: 0 auto;">
                 Estamos listos para optimizar juntos tus procesos.<br>

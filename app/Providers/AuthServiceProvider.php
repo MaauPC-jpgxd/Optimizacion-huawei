@@ -15,19 +15,22 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         // Si más adelante creas Policies, las pones aquí
         // Ejemplo: 'App\Models\User' => 'App\Policies\UserPolicy',
+        
     ];
 
     /**
      * Register any authentication / authorization services.
      */
-    public function boot(): void
-    {
-        // Aquí defines tus Gates (permisos personalizados)
-        Gate::define('manage-users', function ($user) {
-        $rol = trim(strtolower($user->role ?? ''));  // limpia espacios y convierte a minúsculas
-        return $rol === 'root';
+public function boot(): void
+{
+    $this->registerPolicies(); // 🔥 SIEMPRE PRIMERO
+
+    Gate::define('solo-root', function ($user) {
+        return trim(strtolower($user->role ?? '')) === 'root';
     });
-        // Puedes agregar más Gates en el futuro aquí
-        // Gate::define('editar-inventario', fn ($user) => $user->role === 'root' || $user->role === 'admin');
-    }
+
+    Gate::define('manage-users', function ($user) {
+        return trim(strtolower($user->role ?? '')) === 'root';
+    });
+}
 }

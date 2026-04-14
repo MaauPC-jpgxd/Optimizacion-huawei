@@ -306,13 +306,7 @@ return [
         'icon'   => 'fas fa-tachometer-alt',
     ],
 
-    //['header' => 'Inventario'],
-
-    /*[
-        'text'   => 'Productos en Sucursales',
-        'route'  => 'inventario.index',
-        'icon'   => 'fas fa-warehouse',
-    ],*/
+   
     [
         'text'=>'Inventario',
         'route'=>'articulos.index',
@@ -326,11 +320,7 @@ return [
         'icon' => 'fas fa-money-bill-alt',
         'submenu' => [
 
-            /*[
-                'text' => 'Ventas Por Producto',
-                'route' => 'ventas.huawei', // ✅ existe
-                'icon' => 'fas fa-chart-line',
-            ],*/
+     
 
             [
                 'text' => 'Ventas Detalle',
@@ -345,21 +335,23 @@ return [
         ],
     ],
 
-    ['header' => 'ADMINISTRACIÓN'],
-
-    [
-        'text'   => 'Usuarios',
-        'route'  => 'users.index',
-        'icon'   => 'fas fa-users',
-        //'can'    => 'manage-users',
+   [
+    'text' => 'ADMINISTRACIÓN',
+    'icon' => 'fas fa-cogs',
+    'can'  => 'solo-root',
+    'submenu' => [
+        [
+            'text' => 'Usuarios',
+            'route' => 'users.index',
+            'icon' => 'fas fa-users',
+        ],
+        [
+            'text' => 'Nuevo Usuario',
+            'route' => 'users.create',
+            'icon' => 'fas fa-user-plus',
+        ],
     ],
-
-    [
-        'text'  => 'Nuevo Usuario',
-        'route' => 'users.create',
-        'icon'  => 'fas fa-user-plus',
-        //'can'    => 'manage-users',
-    ],
+],
 
     ['header' => 'CUENTA'],
 

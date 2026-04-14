@@ -95,6 +95,9 @@ Route::get('/articulos/excel', [ArticuloController::class, 'exportExcel'])
     ->name('articulos.excel');
 Route::get('/articulos/pdf', [ArticuloController::class, 'exportPDF'])
     ->name('articulos.pdf');
+    Route::middleware(['can:solo-root'])->group(function () {
+    Route::resource('users', UserController::class);
+});
 });
 //exel y pdf de facturas
 Route::get('ventasc/excel', [VentasCController::class, 'exportExcel'])->name('ventasc.excel');
