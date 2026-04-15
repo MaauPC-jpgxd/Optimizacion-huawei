@@ -9,6 +9,7 @@ use App\Http\Controllers\VentasCabeceraController;
 use App\Http\Controllers\VentasDController;
 use App\Http\Controllers\VentasCController;
 use App\Http\Controllers\ArticuloController;
+use App\Http\Controllers\AnalyticsController;
 // Página de bienvenida pública (sin login)
 Route::get('/', function () {
     return view('bienvenida');
@@ -95,6 +96,9 @@ Route::get('/articulos/excel', [ArticuloController::class, 'exportExcel'])
     ->name('articulos.excel');
 Route::get('/articulos/pdf', [ArticuloController::class, 'exportPDF'])
     ->name('articulos.pdf');
+Route::get('/analytics', [AnalyticsController::class, 'index'])
+    ->name('analytics.index')
+    ->middleware(['auth']);
     Route::middleware(['can:solo-root'])->group(function () {
     Route::resource('users', UserController::class);
 });

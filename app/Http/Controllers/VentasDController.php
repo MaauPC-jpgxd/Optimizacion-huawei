@@ -76,14 +76,14 @@ class VentasDController extends Controller
         $query->where('Sucursal', $request->sucursal);
     }
 
-    if ($request->filled('articulo')) {
+    /*if ($request->filled('articulo')) {
         $buscar = $request->articulo;
 
         $query->where(function ($q) use ($buscar) {
             $q->where('Articulo', 'like', "%$buscar%")
             ->orWhere('ArtDescripcion', 'like', "%$buscar%");
         });
-            }
+            }*/
 
     if ($request->filled('cliente')) {
         $query->where('Cliente', 'like', '%' . $request->cliente . '%');

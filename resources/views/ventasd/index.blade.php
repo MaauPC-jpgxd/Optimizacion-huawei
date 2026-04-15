@@ -125,7 +125,7 @@ use Illuminate\Support\Str;
                         <th>Cant</th>
                         <th>Cliente</th>
                         <th>Nombre</th>
-                        <th>Agente</th>
+                        <!--<th>Agente</th>-->
                         <th>Factura</th>
                         <th>Estatus</th>
                         <th>Tipo</th>
@@ -157,7 +157,7 @@ use Illuminate\Support\Str;
                         <td>{{ $v->Cliente }}</td>
 
                         <td>{{ $v->CteNombre }}</td>
-                        <td>{{$v->Agente}}</td>
+                       <!-- <td>{{$v->Agente}}</td>-->
                         <td>{{ $v->MovID }}</td>
 
                         <td>
