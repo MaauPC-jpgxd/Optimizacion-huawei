@@ -334,11 +334,11 @@ return [
             ],
         ],
     ],
-   [
+   /*[
     'text' => 'Estadísticas',
     'route' => 'analytics.index',
     'icon' => 'fas fa-chart-line',
-],
+],*/
    [
     'text' => 'ADMINISTRACIÓN',
     'icon' => 'fas fa-cogs',
